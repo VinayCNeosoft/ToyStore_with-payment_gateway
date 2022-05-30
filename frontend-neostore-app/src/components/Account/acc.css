@@ -1,0 +1,66 @@
+.Edit_Pro_div{
+    border: 2px solid #d3d3d3;
+    border-radius: .9em;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    padding: 0.5em;
+    width: 600px
+}
+
+.form_change {
+    padding: 1em;
+}
+
+.label_change {
+    color: darkmagenta;
+    font-weight: 600;
+    text-decoration: none;
+}
+.reg_input_change{
+    border-radius: 25px;
+}
+.reg-btn_change , .log-btn_change{
+    border-radius: 25px;
+}
+.social-btn_change{
+    margin-left: 20px;
+    border-radius: 25px;
+}
+.address{
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: large;
+}
+
+
+.Edit_add_div{
+    border: 2px solid #d3d3d3;
+    border-radius: .9em;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.5em;
+}
+
+.avatar{
+    border: crimson 2px solid;
+    border-radius: 50px;
+}
+.profile-btn{
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    width:15vw;
+    border-radius: 20px;
+    border: black 2px solid;
+}
+
+.profile-btn:hover{
+    color: #ff7a59;
+    border: #ff7a59 solid 1px;
+    background:#fff;
+}
+
+/*  */

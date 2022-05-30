@@ -1,0 +1,122 @@
+/* .card:hover .overlay{
+    display: block;
+    border-radius: 20px;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 300px;
+    transition: 2s ease;
+
+}
+
+.card img:hover{
+    display: none;
+}
+.card img{
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+}
+
+.overlay{
+    display: none;
+}
+ */
+.paginationBttns {
+    width: 100%;
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    margin: 3% 0%;
+    font-size: 18px;
+}
+.paginationBttns a {
+    border: 2px solid black;
+    padding: 0px 15px;
+    border-radius: 50px;
+    margin: 0 10px;
+    text-decoration: none;
+    background-color: lightgreen;
+}
+.paginationActive{
+    color: firebrick;
+}
+.proInfo{
+    margin: 0px;
+    text-decoration: none;
+    color: black;
+}
+
+#circle {
+    margin-left: 25px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 10px;
+}
+
+/* RC TABS START */
+
+.rc-tabs {
+    border: none !important;
+  }
+  .rc-tabs-tab {
+    padding: 5px;
+    text-transform: capitalize;
+  }
+  .rc-tabs-tab .rc-tabs-tab-btn {
+    font-weight: normal;
+  }
+  .rc-tabs-tab.rc-tabs-tab-active {
+    background: ececec;
+    color: #00a6f8;
+  }
+  .rc-tabs-ink-bar {
+    background: #59c7fd !important;
+  }
+  .rc-tabs-content-holder {
+    padding: 10px;
+    background: #ececec;
+  }
+  /* RC TABS STOP */
+
+.side_view img{
+  margin-left: 50px;
+  height: 100px;
+  width:100px;
+}
+.pro_link{
+    height: auto;
+    width: auto;
+    text-decoration: none;
+    color: cadetblue;
+}
+.div1   {
+  width:50px;
+  height:50px;
+  float:left;
+  display:inline;
+  margin:0px 0px 10px 10px;
+  background-color:white;
+}
+
+
+.card_prod{
+  box-shadow: 0 15px 25px rgba(129, 124, 124, 0.2);
+  backdrop-filter: blur(1px);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: lightgrey;
+}
+.card_prod img{
+  border-radius: 20px;
+}
+
+.accordion_body{
+  box-shadow: 0 15px 25px rgba(129, 124, 124, 0.2);
+  backdrop-filter: blur(1px);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: lightgrey;
+}

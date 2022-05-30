@@ -1,0 +1,163 @@
+router.post("/forgetpassword",(req,res)=>{
+  console.log(req.body)
+  //check for existing user
+  const { email } = req.body;
+  userModel.findOne({ email }).then((user) => {
+    if (!user) return res.json({ status:400, err:1,msg: "User does not exist" });
+
+
+    // Validate password
+    /* bcrypt.compare(password, user.password).then((isMatch) => {
+      if (!isMatch)
+        return res.json({success:false, status:400 , msg: "Invalid Password" });
+      else{
+      let payload={
+        uid:email
+      }
+      const token=jwt.sign(payload,jwtSecret,{expiresIn:360000})
+      res.json({success:true,status_code:200,msg:"You have logged In",token:token,user})
+      } */
+      // sendmail(email)
+      async function login(emailId) {
+        //const res = await Auth(emailId);
+        // You can follow this approach,
+        // but the second approach is suggested,
+        // as the mails will be treated as important
+        const res = await Auth(emailId, "NeoStore");
+        console.log(res);
+        console.log(res.mail);
+        console.log(res.OTP);
+        console.log(res.success);
+      }
+      LoginCredentials.mailID=cred.email
+      LoginCredentials.password=cred.password
+      LoginCredentials.use = true;
+      login(email)
+      res.json({success:true,status_code:200,msg:"OTP sent to your registered Mail ID",user})
+    });
+});
+
+
+
+
+
+
+
+
+
+//create route
+router.post("/register", (req, res) => {
+  multi_upload(req, res, function (err) {
+    console.log(req.body)
+      if (err instanceof multer.MulterError) {
+        res
+          .status(500)
+          .send({ error: { message: `Multer uploading error1: ${err.message}` } })
+          .end();
+        return;
+      } else if (err) {
+        if (err.name == "ExtensionError") {
+          res.json({ err: err.name });
+        } else {
+          res
+            .status(500)
+            .send({
+              error: { message: `unknown uploading error: ${err.message}` },
+            })
+            .end();
+        }
+        return;
+      }
+      console.log(req.files)
+      console.log(req.body)
+      let ufname = req.body.first_name
+      let ulname = req.body.last_name
+      let uemail = req.body.email
+     /*  let ins=new userModel({fname:req.body.first_name,lname:req.body.last_name,
+      email:req.body.email,password:req.body.password,mobile:req.body.mobile,gender:req.body.gender,logo:req.files[0].path});
+      
+       */
+      userModel.findOne({email:req.body.email},function(err,user){
+        // Make sure user doesn't already exist
+        if (user) return res.status(400).send({ msg: 'The email address you have entered is already associated with another account.' });
+      })
+        //create and save the user
+        user =new userModel({fname:req.body.first_name,lname:req.body.last_name,
+        email:req.body.email,password:req.body.password,mobile:req.body.mobile,gender:req.body.gender,logo:req.files[0].path});
+        user.save(function (err) {
+          if (err) {res.json({ success: false, status_code: 500,message: err.message});}
+          // Create a verification token for this user
+          var token = new tokenModel({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+          // Save the verification token
+          token.save(function (err) {
+            if (err) {  res.json({ success:false,status_code:500,message: err.message})}
+              // Send the email
+              var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: cred.email,
+                  pass: cred.password
+                }
+                });
+                var mailOptions = {
+                from: cred.email,
+                to: user.email,
+                subject: 'Account Verification Token',
+                text: 'Hello,' + 'Please verify your account by clicking the link: http://' + req.headers.host + '/confirmation/' + token.token + ''
+                };
+                transporter.sendMail(mailOptions, function (err) {
+                  if (err)
+                  {  return res.json({ success:false,status_code:500,message: err.message })}
+                  else
+                  { return res.json({ success:true,status_code:200,message: 'A verification email has been sent to ' + uemail})}
+                });
+          });
+          res.json({ success: true, status_code: 200,message: `${ufname} ${ulname} was Registered Successfully`});
+      });
+      // userModel.findOne({email:req.body.email})
+      /* .then(user=>{
+        if(user){
+          res.json({ success: false, status_code: 422,message: `Oops! ${uemail} already exist ! try with new email`});
+        }
+        else{
+          console.log(user)
+          bcrypt.genSalt(10, function(err, salt) { bcrypt.hash(req.body.password, salt, function(err, hash)
+            {
+              if (err) throw err;
+              ins.password = hash;
+              ins.save(() => {
+                res.json({ success: true, status_code: 200,message: `${ufname} ${ulname} was Registered Successfully`});
+              });
+              var token = new tokenModel({ _userId: userModel._id, token: crypto.randomBytes(16).toString('hex') });
+              console.log(token)
+              token.save((err)=> {
+              if (err) {  res.json({ success:false,status_code:500,message: err.message})}
+              else{
+                var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: cred.email,
+                  pass: cred.password
+                }
+                });
+                var mailOptions = {
+                from: cred.email,
+                to: user.email,
+                subject: 'Account Verification Token',
+                text :"Hello"
+                // text: 'Hello,/n/n' + 'Please verify your account by clicking the link: /nhttp:////' + req.headers.host + '//confirmation//' + token.token + './n'
+                };
+                transporter.sendMail(mailOptions, function (err) {
+                  if (err)
+                  {  res.json({ success:false,status_code:500,message: err.message })}
+                  else
+                  { return res.json({ success:true,status_code:200,message: 'A verification email has been sent to ' + uemail + '.' })}
+                });
+              }
+            });
+          })
+        })
+      }}); */
+    })
+  }
+)

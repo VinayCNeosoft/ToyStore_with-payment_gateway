@@ -1,0 +1,262 @@
+import React,{useState,useEffect} from 'react'
+import {Link, useNavigate} from 'react-router-dom'
+import { Container,Col,Row ,Accordion, Button, Card,Form} from 'react-bootstrap'
+import { commonProduct } from '../../config/NodeService'
+import StarRatings from 'react-star-ratings';
+
+
+function AllProducts() {
+    const [fetchAllProd,setFetchAllProd] = useState([])
+    const [catData,setCatData] = useState([])
+    const [colData,setColData] = useState([])
+    const [query,setQuery] = useState("")
+    const [colorQuery,setColorQuery] = useState("")
+
+    const navigate = useNavigate()
+
+    const getData=()=>{
+        commonProduct()
+        .then(res=>{
+            if(res.data.success===true){
+                console.log(res.data.allProd)
+                setFetchAllProd(res.data.allProd)
+                setFetchAllProd.filter(red=>red.color_id.color_name==="red")
+            }
+            else if(res.data.success===false){
+                console.log(res.data)
+                alert(`${res.data.message}`)
+            }
+            else{
+                console.log("")
+            }
+        })
+    }
+
+    useEffect(()=>{
+        if(localStorage.getItem("token")===""){
+            navigate("/")
+        }
+        else{
+            getData()
+        }
+    },[navigate])
+    console.log(fetchAllProd)
+    const filterItem = (color) =>{
+        const updatedItems = fetchAllProd.filter((currElem)=>{
+            return currElem.color_id.color_name === color;
+        })
+        // console.log(catData)
+        setCatData(updatedItems)
+        console.log(updatedItems)
+        console.log(catData)
+    }
+    return (
+        <>
+            <h1 className='text-center text-danger'>All Products</h1>
+            <hr/>
+            <Container>
+                <Row>
+                <Col xs={4} md={2}>
+                <Accordion>
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>All Product</Accordion.Header>
+                    </Accordion.Item>
+                </Accordion>
+                <br/>
+                <Form.Select aria-label="Default select example" onChange={e=>setQuery(e.target.value)}>
+                    <option>Categories</option>
+                    <option value="dining table">Dining Table</option>
+                    <option value="bed">Bed</option>
+                    <option value="sofa">Sofa</option>
+                    <option value="wardrobe">Wardrobes</option>
+                </Form.Select>
+                <br/>
+                <Accordion defaultActiveKey={['0']} alwaysopen="true">
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>Color</Accordion.Header>
+                        <Accordion.Body>
+                        <Row><Button onClick={()=>filterItem("red")}>Red</Button></Row>
+                        <Row><Button>Brown</Button></Row>
+                        <Row><Button>Black</Button></Row>
+                        <Row><Button>White</Button></Row>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+                 <Form.Select aria-label="Default select example" onChange={e=>setColorQuery(e.target.value)}>
+                    <option>Color</option>
+                    <option value="red">Red</option>
+                    <option value="black">Black</option>
+                    <option value="white">White</option>
+                    <option value="blue">blue</option>
+                </Form.Select>
+                </Col>
+                {/* <Col xs={12} md={10}>
+                    <Container className='mx-auto my-2 justify-content-md-center justify-content-lg-center'>
+                    <Row xs={1} md={2} className="g-2">
+                    {fetchAllProd.filter(data=>{
+                        if(query==="" || colorQuery==="")
+                            return data
+                        else if(data.category_id.category_name.includes(query) && data.color_id.color_name.includes(colorQuery)) return data
+                    }).map((ele,id)=>(
+                        <Card style={{ width: '20rem' ,margin:10, borderRadius:20}} key={id}>
+                        <Card.Img variant="top" src={ele.product_image[0]} style={{width:"auto",height:"250px",borderTopRightRadius:20,borderTopLeftRadius:20}} />
+                        <hr/>
+                        <Card.Body>
+                            <Card.Title style={{height:"110px"}}>{ele.product_name}</Card.Title>
+                            <hr/>
+                            <Card.Text>
+                                <b>₹ {ele.product_cost}/-</b>
+                            </Card.Text>
+                            <div className='text-center'>
+                                <Button variant="danger" style={{width:"auto"}}>Add to Cart</Button>
+                                <Container>
+                                <br/>
+                                <StarRatings
+                                    rating={ele.product_rating}
+                                    starRatedColor="orange"
+                                    numberOfStars={5}
+                                    name='rating'
+                                    starDimension="30px"
+                                />
+                                </Container>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                    ))}
+                    </Row>
+                    </Container>
+                </Col> */}
+                <Col xs={12} md={10}>
+                    <Container className='mx-auto my-2 justify-content-md-center justify-content-lg-center'>
+                    <Row xs={1} md={2} className="g-2">
+                    {catData.filter((data,i)=>{
+                        if(query==="" || colorQuery==="")
+                            return data
+                        else if(data.category_id.category_name.includes(query) && data.color_id.color_name.includes(colorQuery)) return data
+                    }).map((ele,id)=>(
+                        <Card style={{ width: '20rem' ,margin:10, borderRadius:20}} key={id}>
+                        <Card.Img variant="top" src={ele.product_image[0]} style={{width:"auto",height:"250px",borderTopRightRadius:20,borderTopLeftRadius:20}} />
+                        <hr/>
+                        <Card.Body>
+                            <Card.Title style={{height:"110px"}}>{ele.product_name}</Card.Title>
+                            <hr/>
+                            <Card.Text>
+                                <b>₹ {ele.product_cost}/-</b>
+                            </Card.Text>
+                            <div className='text-center'>
+                                <Button variant="danger" style={{width:"auto"}}>Add to Cart</Button>
+                                <Container>
+                                <br/>
+                                <StarRatings
+                                    rating={ele.product_rating}
+                                    starRatedColor="orange"
+                                    numberOfStars={5}
+                                    name='rating'
+                                    starDimension="30px"
+                                />
+                                </Container>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                    ))}
+                    </Row>
+                    </Container>
+                </Col>
+                </Row>
+            </Container>
+            <hr/>
+            <br/>
+        </>
+    )
+}
+
+export default AllProducts
+
+/* [
+            {
+                product_name:'',
+                product_image:[''],
+                product_desc:'',
+                product_rating:0,
+                product_producer:'',
+                product_cost:0,
+                product_stock:0,
+                product_dimension:'',
+                product_material:'',
+                color_id:{
+                    color_name:'',
+                    color_code:''
+                },
+                category_id:{
+                    category_name:'',
+                    category_image:''
+                }
+            }
+        ] */
+
+
+
+
+
+
+        import { lazy,Suspense } from 'react';
+import spin from'./spinner.gif'
+import {BrowserRouter as Router , Routes,Route} from 'react-router-dom'
+
+
+const Dashboard = lazy(()=> import( "./components/home/Dashboard"))
+const Login = lazy(()=> import( "./components/auth/Login"))
+const Register = lazy(()=> import( "./components/auth/Register"))
+const ForgetPassword = lazy(()=> import( './components/auth/ForgetPassword'))
+const Profile = lazy(()=> import( './components/Account/Profile'))
+const ResetPassword = lazy(()=> import( './components/auth/ResetPassword'))
+const EditProfile = lazy(()=> import( './components/Account/EditProfile'))
+const ChangePassword = lazy(()=> import( './components/Account/ChangePassword'))
+const Header = lazy(()=> import( './components/common_Components/Header'))
+const Footer = lazy(()=> import( './components/common_Components/Footer'))
+const Subscribe = lazy(()=> import( './components/common_Components/Subscribe'))
+const Address = lazy(()=> import( './components/Account/Address'))
+const VerifyEmail = lazy(()=> import( './components/auth/VerifyEmail'))
+const EditAddress = lazy(()=> import( './components/Account/EditAddress'))
+const AllProducts = lazy(()=> import( './components/Product/AllProducts'))
+const ProductDetail = lazy(()=> import( './components/Product/ProductDetail'))
+const Cart = lazy(()=> import( './components/Product/Cart'))
+const Checkout = lazy(()=> import( './components/Product/Checkout'))
+const PlaceOrder = lazy(()=> import( './components/Product/PlaceOrder'))
+const Orders = lazy(()=> import( './components/Product/Orders'))
+
+function App() {
+  return (
+    <>
+    <Suspense fallback={<div> <img src={spin} alt='loading' /></div>}>
+    <Router>
+      <Header/>
+    <Routes>
+      <Route path="/" exact element={<Dashboard/>}/>
+      <Route path="/subscribe" exact element={<Subscribe/>}/>
+      <Route path="/login" exact element ={<Login/>}/>
+      <Route path="/register" exact element ={<Register/>}/>
+      <Route path="/verify_email" exact element={<VerifyEmail/>}/>
+      <Route path="/forgetpassword" exact element={<ForgetPassword/>}/>
+      <Route path="/resetpassword" exact element={<ResetPassword/>}/>
+      <Route path="/changepassword" exact element={<ChangePassword/>}/>
+      <Route path="/profile" exact element={<Profile/>}/>
+      <Route path="/edit" exact element={<EditProfile/>}/>
+      <Route path="/address" exact element={<Address/>}/>
+      <Route path="/editaddress" exact element={<EditAddress/>}/>
+      <Route path="/commonproduct" exact element={<AllProducts/>}/>
+      <Route path="/product/:id" exact element={<ProductDetail/>}/>
+      <Route path="/cart" exact element={<Cart/>}/>
+      <Route path="/checkout" element={<Checkout/>}/>
+      <Route path="/placeorder" element={<PlaceOrder/>}/>
+      <Route path="/order" element={<Orders/>}/>
+    </Routes>
+      <Footer/>
+    </Router>
+    </Suspense>
+    </>
+  );
+}
+
+export default App;
+
